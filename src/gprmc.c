@@ -52,7 +52,7 @@ bool nmeaGPRMCParse(const char *s, const size_t sz, NmeaGPRMC *pack) {
 
   /* parse */
   tokenCount = nmeaScanf(s, sz, //
-      "$GPRMC,%16s,%C,%F,%C,%F,%C,%f,%f,%16s,%F,%C,%C*", //
+      "$%*2s" NMEALIB_GPRMC_PREFIX ",%16s,%C,%F,%C,%F,%C,%f,%f,%16s,%F,%C,%C*", //
       timeBuf, //
       &pack->sigSelection, //
       &pack->latitude, //

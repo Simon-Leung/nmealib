@@ -22,7 +22,11 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __GNUC__
+#include <sys/time.h>
+#else
 #include <time.h>
+#endif
 
 NmeaSignal nmeaInfoModeToSignal(char mode) {
   switch (mode) {
@@ -92,12 +96,12 @@ char nmeaInfoSignalToMode(NmeaSignal sig) {
   }
 }
 
-bool nmeaTimeParseTime(const char *s, NmeaTime *ntime) {
+bool nmeaTimeParseTime(const char *s, NmeaTime *time) {
   const char *t;
   size_t sz;
 
   if (!s //
-      || !ntime) {
+      || !time) {
     return false;
   }
 
@@ -109,25 +113,25 @@ bool nmeaTimeParseTime(const char *s, NmeaTime *ntime) {
   }
 
   if (sz == 6) { // HHMMSS
-    ntime->hsec = 0;
-    return (3 == nmeaScanf(t, sz, "%2u%2u%2u", &ntime->hour, &ntime->min, &ntime->sec));
+    time->hsec = 0;
+    return (3 == nmeaScanf(t, sz, "%2u%2u%2u", &time->hour, &time->min, &time->sec));
   }
 
   if (sz == 8) { // HHMMSS.t
-    if (4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &ntime->hour, &ntime->min, &ntime->sec, &ntime->hsec)) {
-      ntime->hsec *= 10;
+    if (4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &time->hour, &time->min, &time->sec, &time->hsec)) {
+      time->hsec *= 10;
       return true;
     }
     return false;
   }
 
   if (sz == 9) { // HHMMSS.hh
-    return (4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &ntime->hour, &ntime->min, &ntime->sec, &ntime->hsec));
+    return (4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &time->hour, &time->min, &time->sec, &time->hsec));
   }
 
   if (sz == 10) { // HHMMSS.mmm
-    if ((4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &ntime->hour, &ntime->min, &ntime->sec, &ntime->hsec))) {
-      ntime->hsec = (ntime->hsec + 5) / 10;
+    if ((4 == nmeaScanf(t, sz, "%2u%2u%2u.%u", &time->hour, &time->min, &time->sec, &time->hsec))) {
+      time->hsec = (time->hsec + 5) / 10;
       return true;
     }
     return false;
@@ -178,6 +182,7 @@ void nmeaTimeSet(NmeaTime *utc, uint32_t *present, struct timeval *timeval) {
     return;
   }
 
+  #ifdef __GNUC__
   if (timeval) {
     gmtime_r(&timeval->tv_sec, &tm);
     usec = timeval->tv_usec;
@@ -186,6 +191,16 @@ void nmeaTimeSet(NmeaTime *utc, uint32_t *present, struct timeval *timeval) {
     gmtime_r(&tv.tv_sec, &tm);
     usec = tv.tv_usec;
   }
+  #else
+  if (timeval) {
+    memcpy(&tm, gmtime(&timeval->tv_sec), sizeof(struct tm));
+    usec = 0;
+  } else {
+    time(&tv.tv_sec);
+    memcpy(&tm, gmtime(&tv.tv_sec), sizeof(struct tm));
+    usec = 0;
+  }
+  #endif
 
   utc->year = (unsigned int) tm.tm_year + 1900;
   utc->mon = (unsigned int) tm.tm_mon + 1;
@@ -384,7 +399,8 @@ void nmeaInfoSanitise(NmeaInfo *info) {
    */
 
   if (nmeaInfoIsPresentAll(info->present, NMEALIB_PRESENT_SIG)) {
-    if (info->sig > NMEALIB_SIG_LAST) {
+    if ((info->sig < NMEALIB_SIG_FIRST) //
+        || (info->sig > NMEALIB_SIG_LAST)) {
       info->sig = NMEALIB_SIG_INVALID;
     }
   }

@@ -32,8 +32,8 @@ typedef struct _NmeaContext {
 
 /** The nmealib context */
 static NmeaContext nmealibContext = {
-    .traceFunction = NULL,
-    .errorFunction = NULL };
+    NULL,
+    NULL };
 
 NmeaContextPrintFunction nmeaContextSetTraceFunction(NmeaContextPrintFunction traceFunction) {
   NmeaContextPrintFunction r = nmealibContext.traceFunction;
@@ -55,7 +55,8 @@ void nmeaContextTraceBuffer(const char *s, size_t sz) {
 }
 
 #define nmeaContextBufferEnlarge(buf, sz) { \
-  if (!(buf = realloc(buf, sz))) { \
+    buf = realloc(buf, sz);\
+  if (!buf) { \
     /* can't be covered in a test */ \
     goto out; \
   } \

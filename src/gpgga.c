@@ -54,7 +54,7 @@ bool nmeaGPGGAParse(const char *s, const size_t sz, NmeaGPGGA *pack) {
 
   /* parse */
   tokenCount = nmeaScanf(s, sz, //
-      "$" NMEALIB_GPGGA_PREFIX ",%16s,%F,%C,%F,%C,%d,%u,%F,%f,%C,%f,%C,%F,%u*", //
+      "$%*2s" NMEALIB_GPGGA_PREFIX ",%16s,%F,%C,%F,%C,%d,%u,%F,%f,%C,%f,%C,%F,%u*", //
       timeBuf, //
       &pack->latitude, //
       &pack->latitudeNS, //

@@ -20,7 +20,7 @@
 #include <nmealib/context.h>
 #include <ctype.h>
 #include <errno.h>
-#include <fcntl.h>
+//#include <fcntl.h>
 #include <limits.h>
 #include <math.h>
 #include <stdarg.h>
@@ -28,34 +28,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 /** The maximum size of a string-to-number conversion buffer*/
 #define NMEALIB_CONVSTR_BUF    64
 
 void nmeaRandomInit(void) {
-  srandom((unsigned int) time(NULL));
+  srand((unsigned int) time(NULL));
 }
 
 double nmeaRandom(const double min, const double max) {
   long value;
-  int randomFile;
+  FILE *randomFile;
   double range = fabs(max - min);
 
-  randomFile = open("/dev/urandom", O_RDONLY);
-  if (randomFile == -1) {
+  randomFile = fopen("/dev/urandom", "r");
+  if (randomFile == NULL) {
     /* can't be covered in a test */
-    randomFile = open("/dev/random", O_RDONLY);
+    randomFile = fopen("/dev/random", "r");
   }
 
-  if ((randomFile == -1) //
-      || (read(randomFile, &value, sizeof(value)) != sizeof(value))) {
+  if ((randomFile == NULL) //
+      || (fread(&value, 1, sizeof(value), randomFile) != sizeof(value))) {
     /* can't be covered in a test */
-    value = random();
+    value = rand();
   }
 
-  if (randomFile != -1) {
-    close(randomFile);
+  if (randomFile != NULL) {
+    fclose(randomFile);
   }
 
   return min + ((fabs((double) value) * range) / (double) LONG_MAX);
@@ -303,6 +303,8 @@ size_t nmeaScanf(const char *s, size_t sz, const char *format, ...) {
   void *arg = NULL;
   va_list args;
 
+  int skip = 0;
+
   if (!s //
       || !format) {
     return 0;
@@ -313,6 +315,12 @@ size_t nmeaScanf(const char *s, size_t sz, const char *format, ...) {
   for (formatCharacter = format; *formatCharacter && (sCharacter <= sEnd); formatCharacter++) {
     switch (state) {
       case NMEALIB_SCANF_TOKEN:
+        if(*formatCharacter == '*')
+        {
+          skip = 1;
+          sCharacter++;
+          break;
+        }
         if (isdigit(*formatCharacter)) {
           widthCount++;
           break;
@@ -321,7 +329,10 @@ size_t nmeaScanf(const char *s, size_t sz, const char *format, ...) {
         /* start of a token */
 
         sTokenStart = sCharacter;
-        tokens++;
+        if(!skip)
+        {
+            tokens++;
+        }
 
         if (!widthCount) {
           /* no width specified */
@@ -335,6 +346,12 @@ size_t nmeaScanf(const char *s, size_t sz, const char *format, ...) {
 
         if (!width) {
           /* no width specified */
+
+          if (('C' == toupper(*formatCharacter)) //
+              && (*sCharacter != formatCharacter[1])) {
+            width = 1;
+          }
+
           if (!formatCharacter[1] //
               || (0 == (sCharacter = (char *) memchr(sCharacter, formatCharacter[1], (size_t) sCharsLeft)))) {
             sCharacter = sEnd;
@@ -369,6 +386,11 @@ size_t nmeaScanf(const char *s, size_t sz, const char *format, ...) {
 
         /* go back to the compare state after storing arg */
         state = NMEALIB_SCANF_COMPARE;
+        if(skip)
+        {
+            skip = 0;
+            break;
+        }
 
         arg = NULL;
         switch (*formatCharacter) {

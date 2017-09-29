@@ -21,12 +21,19 @@
 #include <nmealib/util.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <sys/time.h>
+#include <time.h>
 
 #ifdef  __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+#ifndef __GNUC__
+struct timeval
+{
+    time_t tv_sec;
+    time_t tv_usec;
+};
+#endif
 /*
  * SIG
  */
@@ -148,7 +155,7 @@ static INLINE const char *nmeaInfoFixToString(NmeaFix fix) {
  */
 
 /** The maximum number of satellites (must be a multiple of NMEALIB_GPGSV_MAX_SATS_PER_SENTENCE) */
-#define NMEALIB_MAX_SATELLITES              (72u)
+#define NMEALIB_MAX_SATELLITES              (12u)
 
 /** The default latitude */
 #define NMEALIB_LATITUDE_DEFAULT_NDEG       (0.0)
@@ -176,10 +183,10 @@ typedef struct _NmeaTime {
  * determined by the length of the string.
  *
  * @param s The time
- * @param ntime The structure in which to store the parsed time
+ * @param time The structure in which to store the parsed time
  * @return True on success
  */
-bool nmeaTimeParseTime(const char *s, NmeaTime *ntime);
+bool nmeaTimeParseTime(const char *s, NmeaTime *time);
 
 /**
  * Parse a NMEA date into a NmeaTime structure (date only, no time).

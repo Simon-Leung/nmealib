@@ -27,7 +27,15 @@ extern "C" {
 #endif /* __cplusplus */
 
 #ifndef INLINE
-#define INLINE inline __attribute__((always_inline))
+#if defined ( __CC_ARM   )
+    #define INLINE __inline __attribute__((always_inline))
+#elif defined ( __ICCARM__ )
+    #define INLINE inline __attribute__((always_inline))
+#elif defined   (  __GNUC__  )
+    #define INLINE inline __attribute__((always_inline))
+#elif defined   (  __TASKING__  )
+    #define INLINE inline __attribute__((always_inline))
+#endif
 #endif
 
 #ifndef MAX

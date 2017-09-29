@@ -48,8 +48,8 @@
  * | satinfo inview count | x     |       | x     |       |       |
  * | satinfo inview       |       |       | x     |       |       |
  *
- * (1) Only sets the NmeaInfo sig when it is not set yet.<br/>
- * (2) Not present in the sentence but the library sets it up.<br/>
+ * (1) Only sets the NmeaInfo sig when it is not set yet.
+ * (2) Not present in the sentence but the library sets it up.
  * (3) If the sentence is a v2.3+ sentence then the NmeaInfo sig is set
  *     normally, otherwise the NmeaInfo sig is only set when it is not
  *     set yet.
@@ -101,28 +101,28 @@ typedef struct _NmeaSentencePrefixToType {
  */
 static const NmeaSentencePrefixToType nmealibSentencePrefixToType[] = {
     {
-        .prefix = NMEALIB_GPGGA_PREFIX, //
-        .sentence = NMEALIB_SENTENCE_GPGGA //
+        NMEALIB_GPGGA_PREFIX, //
+        NMEALIB_SENTENCE_GPGGA //
     },
     {
-        .prefix = NMEALIB_GPGSA_PREFIX, //
-        .sentence = NMEALIB_SENTENCE_GPGSA //
+        NMEALIB_GPGSA_PREFIX, //
+        NMEALIB_SENTENCE_GPGSA //
     },
     {
-        .prefix = NMEALIB_GPGSV_PREFIX, //
-        .sentence = NMEALIB_SENTENCE_GPGSV //
+        NMEALIB_GPGSV_PREFIX, //
+        NMEALIB_SENTENCE_GPGSV //
     },
     {
-        .prefix = NMEALIB_GPRMC_PREFIX, //
-        .sentence = NMEALIB_SENTENCE_GPRMC //
+        NMEALIB_GPRMC_PREFIX, //
+        NMEALIB_SENTENCE_GPRMC //
     },
     {
-        .prefix = NMEALIB_GPVTG_PREFIX, //
-        .sentence = NMEALIB_SENTENCE_GPVTG //
+        NMEALIB_GPVTG_PREFIX, //
+        NMEALIB_SENTENCE_GPVTG //
     },
     {
-        .prefix = NULL, //
-        .sentence = NMEALIB_SENTENCE_GPNON //
+        NULL, //
+        NMEALIB_SENTENCE_GPNON //
     }//
 };
 

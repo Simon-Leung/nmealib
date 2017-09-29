@@ -73,7 +73,7 @@ bool nmeaGPGSVParse(const char *s, const size_t sz, NmeaGPGSV *pack) {
 
   /* parse */
   tokenCount = nmeaScanf(s, sz, //
-      "$" NMEALIB_GPGSV_PREFIX ",%u,%u,%u" //
+      "$%*2s" NMEALIB_GPGSV_PREFIX ",%u,%u,%u" //
       ",%u,%d,%u,%u"//
       ",%u,%d,%u,%u"//
       ",%u,%d,%u,%u"//

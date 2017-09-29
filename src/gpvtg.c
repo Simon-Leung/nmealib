@@ -47,7 +47,7 @@ bool nmeaGPVTGParse(const char *s, const size_t sz, NmeaGPVTG *pack) {
 
   /* parse */
   tokenCount = nmeaScanf(s, sz, //
-      "$" NMEALIB_GPVTG_PREFIX ",%f,%C,%f,%C,%f,%C,%f,%C*", //
+      "$%*2s" NMEALIB_GPVTG_PREFIX ",%f,%C,%f,%C,%f,%C,%f,%C*", //
       &pack->track, //
       &pack->trackT, //
       &pack->mtrack, //

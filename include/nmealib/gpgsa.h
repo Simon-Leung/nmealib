@@ -33,7 +33,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /** The NMEA prefix */
-#define NMEALIB_GPGSA_PREFIX "GPGSA"
+#define NMEALIB_GPGSA_PREFIX "GSA"
 
 /** The number of satellite PRNs in the sentence */
 #define NMEALIB_GPGSA_SATS_IN_SENTENCE (12)
@@ -47,16 +47,16 @@ extern "C" {
  * $GPGSA,sig,fix,prn1,prn2,prn3,,,,,,,,,prn12,pdop,hdop,vdop*checksum
  * </pre>
  *
- * | Field       | Description                                      | present                       |
- * | :---------: | ------------------------------------------------ | :---------------------------: |
- * | $GPGSA      | NMEA prefix                                      | -                             |
- * | sig         | Selection of 2D or 3D fix (A = auto, M = manual) | SIG                           |
- * | fix         | Fix, see NMEALIB_FIX_* defines                   | FIX                           |
- * | prn1..prn12 | PRNs of satellites used for fix (12 PRNs)        | SATINUSE \| SATINUSECOUNT (1) |
- * | pdop        | Dilution of position                             | PDOP                          |
- * | hdop        | Horizontal dilution of position                  | HDOP                          |
- * | vdop        | Vertical dilution of position                    | VDOP                          |
- * | checksum    | NMEA checksum                                    | -                             |
+ * | Field       | Description                                      | present                      |
+ * | :---------: | ------------------------------------------------ | :--------------------------: |
+ * | $GPGSA      | NMEA prefix                                      | -                            |
+ * | sig         | Selection of 2D or 3D fix (A = auto, M = manual) | SIG                          |
+ * | fix         | Fix, see NMEALIB_FIX_* defines                   | FIX                          |
+ * | prn1..prn12 | PRNs of satellites used for fix (12 PRNs)        | SATINUSE | SATINUSECOUNT (1) |
+ * | pdop        | Dilution of position                             | PDOP                         |
+ * | hdop        | Horizontal dilution of position                  | HDOP                         |
+ * | vdop        | Vertical dilution of position                    | VDOP                         |
+ * | checksum    | NMEA checksum                                    | -                            |
  *
  * (1) Also sets SATINUSECOUNT when parsing and when converting from NmeaGPGSA
  *     to NmeaInfo. SATINUSECOUNT is <b>not</b> used when converting from

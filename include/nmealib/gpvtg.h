@@ -33,7 +33,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /** The NMEA prefix */
-#define NMEALIB_GPVTG_PREFIX "GPVTG"
+#define NMEALIB_GPVTG_PREFIX "VTG"
 
 /**
  * GPVTG packet information structure (Track made good and ground speed)

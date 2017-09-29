@@ -39,8 +39,11 @@ NmeaSentence nmeaSentenceFromPrefix(const char *s, const size_t sz) {
     return NMEALIB_SENTENCE_GPNON;
   }
 
+  str += 2;
+  size -= 2;
+
   while (nmealibSentencePrefixToType[i].prefix) {
-    if (!strncmp(str, nmealibSentencePrefixToType[i].prefix, NMEALIB_PREFIX_LENGTH)) {
+    if (!strncmp(str, nmealibSentencePrefixToType[i].prefix, NMEALIB_PREFIX_LENGTH - 2)) {
       return nmealibSentencePrefixToType[i].sentence;
     }
 
