@@ -22,7 +22,7 @@ Features
 
 - Parsing of NMEA sentences into C structures
 - Generate NMEA sentences from C structures
-- Supported sentences: GPGGA, GPGSA, GPGSV, GPRMC, GPVTG
+- Supported sentences: $**GGA, $**GSA, $**GSV, $**RMC, $**VTG. eg. $GPGGA, $GNGGA
 - Multilevel architecture of algorithms
 - Additional functions of geographical mathematics
 
